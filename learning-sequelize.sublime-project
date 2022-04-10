@@ -6,6 +6,9 @@
 		},
 		{
 			"path": "../learning-sql/postgresql/"
+		},
+		{
+			"path": "../orm-sequelize-projeto-aula-0/"
 		}
 	]
 }
