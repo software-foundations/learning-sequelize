@@ -94,8 +94,11 @@ nvm use 16.14.2
 
 - Docker and Docker Compose
 
-```console
-Something from digital ocean
+```bash
+# Docker version 20.10.11, build dea9396 
+# docker-compose version 1.26.0, build d4451659 
+
+# Install from some both digital ocean or official docker page
 ```
 
 - Postman
