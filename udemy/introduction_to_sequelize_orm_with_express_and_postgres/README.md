@@ -105,10 +105,19 @@ nvm use 16.14.2
 
 ```bash
 sudo snap install postman
+
+# We can use insomnia instead of postman
+sudo snap install insomnia
 ```
 
 - DBeaver
 
 ```bash
 sudo snap install dbeaver-ce
+```
+
+- VSCode
+
+```bash
+sudo snap install code --classic
 ```
