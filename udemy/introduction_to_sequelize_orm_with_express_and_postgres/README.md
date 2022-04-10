@@ -39,3 +39,17 @@ Express.js
 Docker
 Best practices!
 ```
+
+# Tools
+
+- Avoid Windows
+
+- Use Linux, WSL, or a Linux distro alongside Windows
+
+- Node Version Manager (nvm)
+
+- Docker and Docker Compose
+
+- Postman
+
+- DBeaver
