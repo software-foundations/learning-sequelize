@@ -46,10 +46,66 @@ Best practices!
 
 - Use Linux, WSL, or a Linux distro alongside Windows
 
+- Update, and install curl and snap
+
+```bash
+sudo apt update
+
+sudo apt install curl
+
+sudo apt install snapd
+```
+
 - Node Version Manager (nvm)
+
+```bash
+# https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04-pt
+# https://tecadmin.net/how-to-install-nvm-on-ubuntu-20-04/
+
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+
+source ~/.profile
+
+nvm --version
+```
+
+- Node
+```bash
+# -> install the lts node version
+# I will use the 14.17.2 to avoid conflicts
+# Indeed, this tutorial is about the last LTS version: 16.14.2
+
+# way 01
+nvm install --lts
+
+# way 02
+nvm install 16.14.2
+
+nvm list
+
+nvm current
+
+# ->Use nvm version
+# The course node is 14.17.1
+# This is the current LTS version at the time i was coding
+
+nvm use 16.14.2 
+```
 
 - Docker and Docker Compose
 
+```console
+Something from digital ocean
+```
+
 - Postman
 
+```bash
+sudo snap install postman
+```
+
 - DBeaver
+
+```bash
+sudo snap install dbeaver-ce
+```
