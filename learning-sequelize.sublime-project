@@ -9,6 +9,9 @@
 		},
 		{
 			"path": "../orm-sequelize-projeto-aula-0/"
+		},
+		{
+			"path": "../clone-sequelize-course/"
 		}
 	]
 }

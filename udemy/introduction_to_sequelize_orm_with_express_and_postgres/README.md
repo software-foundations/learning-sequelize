@@ -1,5 +1,7 @@
 # Introduction to sequelize orm with express and postgres
 
+---
+
 # About this course
 
 - If you have worked with relational databases, then I want to introduce you to them.
@@ -18,6 +20,8 @@
 
 - "Untested coede is broken code".
 
+---
+
 # What we are going to build ?
 
 - A simple authentication backend which is going to have:
@@ -29,6 +33,8 @@ Refresh tokens
 Access tokens
 Register
 ```
+---
+
 # What we are going to learn ?
 
 ```console
@@ -39,6 +45,8 @@ Express.js
 Docker
 Best practices!
 ```
+
+---
 
 # Tools
 
