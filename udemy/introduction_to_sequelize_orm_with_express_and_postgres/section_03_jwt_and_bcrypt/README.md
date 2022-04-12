@@ -171,3 +171,40 @@ Authorization: Bearer <token>
 	<br>
 	<p>Do note that with signed tokens, all the information contained within the token is exposed to users or other parties, even though they are unable to change it. This means you should not push not secret information within the token</p>
 </div>
+
+---
+
+# Bcrypt
+
+<div>
+	<a href="https://auth0.com/blog/hashing-in-action-understanding-bcrypt/">Bcrypt</a>
+</div>
+
+## Introduction
+
+<div style="text-align:justify">
+	<p>The bcrypt hashing function allow us to build a password security platform that scales with computation power and always hashes every password with a salt</p>
+	<p>There are plenty of cryptographic functions to choose from such as the SHA2 family and the SHA-3 family. However, one design problem with the SHA families is that they were designed to be computationally fast. How fast a cryptographic function can calculate a hash has an immediate and significant bearing on how safe the password is.</p>
+	<p>Faster calculations mean faster brute-force attacks, for example. Modern hardware in the form of CPUs and GPUs could compute millions, or even billions, of SHA-256 hashes per second against a stolen database. Instead of a fast function, we need a function that is slow at hashing passwords to bring attackers almost to a halt. We also want this function to be adaptive so that we can compensate for future faster hardware by being able to make the function run slower and slower over time.</p>
+	<p>At Auth0, the integrity and security of our data are one of our highest priorities. We use the industry-grade and battle-tested bcrypt algorithm to securely hash and salt passwords. bcrypt allows building a password security platform that can evolve alongside hardware technology to guard against the threats that the future may bring, such as attackers having the computing power to crack passwords twice as fast. Let's learn about the design and specifications that make bcrypt a cryptographic security</p>
+</div>
+
+## Motivation Behind bcrypt
+
+<div style="text-indent:justify;">
+	<p>Technology changes fast. Increasing the speed and power of computers can benefit both the engineers trying to build software systems and the attackers trying to exploit them. Some cryptographic software is not designed to scale with computing power. As explained earlier, the safety of the password depends on how fast the selected cryptographic hashing function can calculate the password hash. A fast function would execute faster when running in much more powerful hardware.</p>
+	<p>To mitigate this attack vector, we could create a cryptographic hash function that can be tuned to run slower in newly available hardware; that is, the function scales with computing power. This is particularly important since, through this attack vector, people tend to keep the length of the passwords constant. Hence, in the design of a cryptographic solution for this problem, <strong>we must account for rapidly evolving hardware and constant password length.</strong></p>
+	<p>This attack vector was well understood by cryptographers in the 90s and an algorithm by the name of <code class="language-js">bcrypt</code> that met these design specifications was presented in 1999 at USENIX. Let's learn how <code class="language-js">bcrypt</code> allows us to create strong password storage systems.</p>
+</div>
+
+# What is bcrypt ?
+
+<div style="text-align:justify;">
+	<p><code class="language-js">bcrypt</code>was designed by Niels Provos and David Mazières based on the Blowfish cipher>): <code class="lanaguage-js">b</code> for Blowfish and <code class="lanaguage-js">crypt</code> for the name of the hashing function used by the UNIX password system.</p>
+	<p><code class="language-js">crypt</code> is a great example of failure to adapt to technology changes. According to USENIX, in 1976, <code class="language-js">crypt</code> could hash fewer than 4 passwords per second. Since attackers need to find the pre-image of a hash in order to invert it, this made the UNIX Team feel very comfortable about the strength of <code class="language-js">crypt</code>. However, 20 years later, a fast computer with optimized software and hardware was capable of hashing 200,000 passwords per second using that function!</p>
+	<p>Inherently, an attacker could then carry out a complete dictionary attack with extreme efficiency. Thus, cryptography that was exponentially more difficult to break as hardware became faster was required in order to hinder the speed benefits that attackers could get from hardware.</p>
+	<p>The Blowfish cipher is a fast block cipher except when changing keys>), the parameters that establish the functional output of a cryptographic algorithm: each new key requires the pre-processing equivalent to encrypting about 4 kilobytes of text>), which is considered very slow compared to other block ciphers. This slow key changing is beneficial to password hashing methods such as bcrypt since the extra computational demand helps protect against dictionary and brute force attacks by <strong>slowing down the attack.</strong></p>
+	<p>As shown in "Blowfish in practice">), <code class="language-js">bcrypt</code> is able to mitigate those kinds of attacks by combining the expensive key setup phase of Blowfish with a variable number of iterations to increase the workload and duration of hash calculations. The largest benefit of <code class="language-js">bcrypt</code> is that, over time, the iteration count can be increased to make it slower allowing <code class="language-js">bcrypt</code> to scale with computing power. We can dimish any benefits attackers may get from faster hardware by increasing the number of iterations to make <code class="language-js">bcrypt</code> slower.</p>
+	<br>
+	<p>So, bcrypt was a slow hashing algorithm wich slow even more when the power of the hardware increases</p>
+</div>
