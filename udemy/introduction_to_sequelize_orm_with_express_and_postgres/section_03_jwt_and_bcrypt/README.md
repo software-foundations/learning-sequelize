@@ -289,3 +289,132 @@ crypto.randomBytes(32).toString("hex")
 output:
 	'c351813ce840f1d287efd45772ab36b28bf5a0c652e32d463f98854a8a073cbb'
 ```
+
+# Creating utils for JWT
+
+
+```bash
+mkdir src/utils
+touch src/utils/jwt-utils.js
+
+```
+
+- jwt-utils.js
+
+```javascript
+import jwt from 'jsonwebtoken';
+import environment from '../config/environment';
+
+export default class JWTUtils {
+
+	static generateAccessToken(payload, options = {}) {
+
+		const { expiresIn = '1d' } = options;
+
+		return jwt.sign(payload, environment.jwtAccessTokenSecret, { expiresIn });
+	}
+
+	static generateRefreshToken(payload) {
+		return jwt.sign(payload, environment.jwtRefreshTokenSecret);
+	}
+
+	static verifyAccessToken(accessToken) {
+		return jwt.verify(accessToken, environment.jwtAccessTokenSecret);
+	}
+
+	static verifyRereshToken(accessToken) {
+		return jwt.verify(accessToken, environment.jwtRefreshTokenSecret);
+	}
+}
+```
+
+---
+
+# Creating a folder to storage tests
+
+```bash
+mkdir server/tests
+mkdir server/tests/utils
+
+```
+
+# Creating test files
+
+```bash
+cd server/tests/utils/
+touch jwt-utils.test.js
+
+```
+
+- jwt-utils.test.js
+
+```javascript
+import jwt from 'jsonwebtoken';
+import JWTUtils from '../src/utils/jwt-utils';
+
+describe('jwt utils', () => {
+	it('should return an access token', () => {
+		const payload = { email: 'test@example.com'};
+		expect(JWTUtils.generateAccessToken(payload)).toEqual(expect.any(String));
+	});
+
+	it('should return an refresh token', () => {
+		const payload = { email: 'test@example.com'};
+		expect(JWTUtils.generateRefreshToken(payload)).toEqual(expect.any(String));
+	});
+
+	it('should verify that the access token is valid', () => {
+		const payload = { email: 'test@example.com'};
+		const jwt = JWTUtils.generateAccessToken(payload);
+		expect(JWTUtils.verifyAccessToken(jwt)).toEqual(
+			expect.objectContaining(payload));
+	});
+
+	it('should error if the access token is invalid', () => {
+		// 'invalid.token cold be any invalid string'
+		expect(() => JWTUtils.verifyAccessToken('invalid.token')).toThrow(
+			jwt.JsonWebTokenError
+		);
+	});
+
+	it('should error if the refresh token is invalid', () => {
+		// 'invalid.token cold be any invalid string'
+		expect(() => JWTUtils.verifyRereshToken('invalid.token')).toThrow(
+			jwt.JsonWebTokenError
+		);
+	});
+});
+```
+
+# Run the tests
+
+```bash
+cd server/
+npm run test:watch
+```
+- output
+
+```console
+ PASS  tests/utils/jwt-utils.test.js                           
+  jwt utils                                                    
+    ✓ should return an access token (2 ms)                     
+    ✓ should return an refresh token (1 ms)                    
+    ✓ should verify that the access token is valid (1 ms)      
+    ✓ should verify that the refresh token is valid            
+    ✓ should error if the access token is invalid (4 ms)       
+    ✓ should error if the refresh token is invalid (1 ms)      
+                                                               
+Test Suites: 1 passed, 1 total                                 
+Tests:       6 passed, 6 total                                 
+Snapshots:   0 total                                           
+Time:        0.299 s, estimated 1 s                            
+Ran all test suites related to changed files.
+                            
+Watch Usage
+ › Press a to run all tests.
+ › Press f to run only failed tests.
+ › Press p to filter by a filename regex pattern.
+ › Press t to filter by a test name regex pattern.
+ › Press q to quit watch mode.
+ › Press Enter to trigger a test run.
+```

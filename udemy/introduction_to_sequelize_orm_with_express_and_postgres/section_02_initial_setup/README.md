@@ -331,3 +331,75 @@ crypto.randomBytes(32).toString("hex")
 output:
 	'c351813ce840f1d287efd45772ab36b28bf5a0c652e32d463f98854a8a073cbb'
 ```
+
+# Creating utils for JWT
+
+
+```bash
+mkdir src/utils
+touch src/utils/jwt-utils.js
+
+```
+
+- jwt-utils.js
+
+```javascript
+import jwt from 'jsonwebtoken';
+import environment from '../config/environment';
+
+export default class JWTUtils {
+
+	static generateAccessToken(payload, options = {}) {
+
+		const { expiresIn = '1d' } = options;
+
+		return jwt.sign(payload, environment.jwtAccessTokenSecret, { expiresIn });
+	}
+
+	static generateRefreshToken(payload) {
+		return jwt.sign(payload, environment.jwtRefreshTokenSecret);
+	}
+
+	static verifyAccessToken(accessToken) {
+		return jwt.verify(accessToken, environment.jwtAccessTokenSecret);
+	}
+
+	static verifyRereshToken(accessToken) {
+		return jwt.verify(accessToken, environment.jwtRefreshTokenSecret);
+	}
+}
+```
+
+# Creating test files
+
+```bash
+cd server/tests/utils/
+touch jwt-utils.test.js
+
+```
+
+- jwt-utils.test.js
+
+```javascript
+import jwt from 'jsonwebtoken';
+import JWTUtils from '../src/utils/jwt-utils';
+
+describe('jwt utils', () => {
+	it('should return an access token', () => {
+		const payload = { email: 'test@example.com'};
+		expect(JWTUtils.generateAccessToken(payload)).toEqual(expect.any(String));
+	});
+
+	it('should return an refresh token', () => {
+		const payload = { email: 'test@example.com'};
+		expect(JWTUtils.generateRefreshToken(payload)).toEqual(expect.any(String));
+	});
+});
+```
+
+# Run the tests
+
+```bash
+cd server/
+npm run test:watch
+```
