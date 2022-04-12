@@ -20,6 +20,12 @@ nvm list
 nvm install 14.17.4
 
 nvm use 14.17.4
+
+nvm alias default 14.17.4
+
+nvm list
+
+node --version
 ```
 
 ---
@@ -245,4 +251,83 @@ username: postgres
 password: test
 
 Note: Change General > Connection name to "sequelize_course_test_db"
+```
+
+# Adding environment variables
+
+```bash
+mkdir src/config
+touch src/config/index.js
+touch src/config/database.js
+touch src/config/environment.js
+
+```
+
+- index.js
+
+```javascript
+import dotenv from 'dotenv';
+dotenv.config();
+```
+
+- database.js
+
+```javascript
+module.exports = {
+	development: {
+		username: process.env.DB_USERNAME || 'postgres',
+		password: process.env.DB_PASSWORD || 'postgres',
+		host: process.env.DB_HOST || 'localhost',
+		port: parseInt(process.env.DB_PORT) || 5432,
+		database: process.env.DB_DATABASE || 'postgres',
+		dialect: 'postgres',	
+	},
+	test: {
+		username: process.env.DB_TEST_USERNAME || 'postgres',
+		password: process.env.DB_TEST_PASSWORD || 'postgres',
+		host: process.env.DB_TEST_HOST || 'localhost',
+		port: parseInt(process.env.DB_TEST_PORT) || 5433,
+		database: process.env.DB_TEST_DATABASE || 'postgres',
+		dialect: 'postgres',
+	},
+	// production: {},
+};
+```
+
+- environment.js
+
+```javascript
+export default {
+	port: parseInt(process.env.PORT) || 8080,
+	nodeEnv: process.env.NODE_ENV || 'production',
+
+	// saltRounds specify the dificult of the hash function
+	saltRounds: parseInt(process.env.SALT_ROUNDS) || 10,
+
+	jwtAccessTokenSecret: process.env.JWT_ACCESS_TOKEN_SECRET || '3416b43d0b38ce33ad33c751ff3612bb0e5afa32e64313a7f9561b32afd84e1a',
+
+	jwtRefreshTokenSecret: process.env.JWT_REFRESH_TOKEN_SECRET || 'c351813ce840f1d287efd45772ab36b28bf5a0c652e32d463f98854a8a073cbb',
+};
+```
+
+- Getting default __jwtAccessTokenSecret__ provided by crypto random function
+
+```javascript
+// In node console
+require("crypto")
+crypto.randomBytes(32).toString("hex")
+
+output:
+	'3416b43d0b38ce33ad33c751ff3612bb0e5afa32e64313a7f9561b32afd84e1a'
+```
+
+- Getting default __jwtRefreshTokenSecret__ provided by crypto random function
+
+```javascript
+// In node console
+require("crypto")
+crypto.randomBytes(32).toString("hex")
+
+output:
+	'c351813ce840f1d287efd45772ab36b28bf5a0c652e32d463f98854a8a073cbb'
 ```

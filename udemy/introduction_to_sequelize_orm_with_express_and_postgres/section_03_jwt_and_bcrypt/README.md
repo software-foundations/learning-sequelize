@@ -197,7 +197,7 @@ Authorization: Bearer <token>
 	<p>This attack vector was well understood by cryptographers in the 90s and an algorithm by the name of <code class="language-js">bcrypt</code> that met these design specifications was presented in 1999 at USENIX. Let's learn how <code class="language-js">bcrypt</code> allows us to create strong password storage systems.</p>
 </div>
 
-# What is bcrypt ?
+## What is bcrypt ?
 
 <div style="text-align:justify;">
 	<p><code class="language-js">bcrypt</code>was designed by Niels Provos and David Mazières based on the Blowfish cipher>): <code class="lanaguage-js">b</code> for Blowfish and <code class="lanaguage-js">crypt</code> for the name of the hashing function used by the UNIX password system.</p>
@@ -208,3 +208,84 @@ Authorization: Bearer <token>
 	<br>
 	<p>So, bcrypt was a slow hashing algorithm wich slow even more when the power of the hardware increases</p>
 </div>
+
+---
+
+# Adding environment variables
+
+```bash
+mkdir src/config
+touch src/config/index.js
+touch src/config/database.js
+touch src/config/environment.js
+
+```
+
+- index.js
+
+```javascript
+import dotenv from 'dotenv';
+dotenv.config();
+```
+
+- database.js
+
+```javascript
+module.exports = {
+	development: {
+		username: process.env.DB_USERNAME || 'postgres',
+		password: process.env.DB_PASSWORD || 'postgres',
+		host: process.env.DB_HOST || 'localhost',
+		port: parseInt(process.env.DB_PORT) || 5432,
+		database: process.env.DB_DATABASE || 'postgres',
+		dialect: 'postgres',	
+	},
+	test: {
+		username: process.env.DB_TEST_USERNAME || 'postgres',
+		password: process.env.DB_TEST_PASSWORD || 'postgres',
+		host: process.env.DB_TEST_HOST || 'localhost',
+		port: parseInt(process.env.DB_TEST_PORT) || 5433,
+		database: process.env.DB_TEST_DATABASE || 'postgres',
+		dialect: 'postgres',
+	},
+	// production: {},
+};
+```
+
+- environment.js
+
+```javascript
+export default {
+	port: parseInt(process.env.PORT) || 8080,
+	nodeEnv: process.env.NODE_ENV || 'production',
+
+	// saltRounds specify the dificult of the hash function
+	saltRounds: parseInt(process.env.SALT_ROUNDS) || 10,
+
+	jwtAccessTokenSecret: process.env.JWT_ACCESS_TOKEN_SECRET || '3416b43d0b38ce33ad33c751ff3612bb0e5afa32e64313a7f9561b32afd84e1a',
+
+	jwtRefreshTokenSecret: process.env.JWT_REFRESH_TOKEN_SECRET || 'c351813ce840f1d287efd45772ab36b28bf5a0c652e32d463f98854a8a073cbb',
+};
+```
+
+- Getting default __jwtAccessTokenSecret__ provided by crypto random function
+
+```javascript
+// In node console
+require("crypto")
+crypto.randomBytes(32).toString("hex")
+
+output:
+	'3416b43d0b38ce33ad33c751ff3612bb0e5afa32e64313a7f9561b32afd84e1a'
+```
+
+- Getting default __jwtRefreshTokenSecret__ provided by crypto random function
+
+```javascript
+// In node console
+require("crypto")
+crypto.randomBytes(32).toString("hex")
+
+output:
+	'c351813ce840f1d287efd45772ab36b28bf5a0c652e32d463f98854a8a073cbb'
+```
