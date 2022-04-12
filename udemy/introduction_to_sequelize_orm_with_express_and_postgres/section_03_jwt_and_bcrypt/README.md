@@ -134,58 +134,40 @@ __it can also verify that the sender of the JWT is who it says it is__
 
 # How JSON Web Tokens work?
 
-<html>
-	<head>
-		<meta charset="utf-8">
-		<style type="text/css">
-			text-ident: 30px;
-			text-align: justify;
-		</style>		
-	</head>
-	<body>
-		<p>In authentication,when the user successfully logs inusing their credentials, a JWT will be returned</p>
-		<br>
-		<p>Since tokens are credentials, great care must be taken to prevent security issues</p>
-		<br>
-		<p>In general, you should not keep tokend longer than required</p>
-		<br><br>
-		<a>
-			<strong>
-				You also should not store sensitive session data in browser storage due to lack of security
-			</strong>
-		</a>
-		<br><br>
-		<p>Whenever the user wants to access a protected route or resource, the user agent should send the JWT, typically in the Autorization header using the Bearer schema</p>
-		<br>
-		<p>The content of the header should like the following</p>
-	</body>
-</html>
+<div style="text-align:justify;">
+	<p>In authentication,when the user successfully logs inusing their credentials, a JWT will be returned</p>
+	<br>
+	<p>Since tokens are credentials, great care must be taken to prevent security issues</p>
+	<br>
+	<p>In general, you should not keep tokend longer than required</p>
+	<br><br>
+	<a>
+		<strong>
+			You also should not store sensitive session data in browser storage due to lack of security
+		</strong>
+	</a>
+	<br><br>
+	<p>Whenever the user wants to access a protected route or resource, the user agent should send the JWT, typically in the Autorization header using the Bearer schema</p>
+	<br>
+	<p>The content of the header should like the following</p>
+</div>
 
 ```console
 Authorization: Bearer <token>
 ```
 
-<html>
-	<head>
-		<meta charset="utf-8">
-		<style type="text/css">
-			text-ident: 30px;
-			text-align: justify;
-		</style>	
-	</head>
-	<body>
-		<p>This can be, in certain cases, a stateless authotization mechanisms. The server's protected routes will check for a valid JWT in the Authorization header, and if it's present, the user will be allowed to access protected resources. If the JWT contains the necessary data, the need to query the database for certain operations may be reduced, though, this may not always be the case</p>
-		<br>
-		<p>Is the token is sent in the Authorization header, Cross-Origin Resource Sharing (CORS) won't be an issue as it doesn't use cookies</p>
-		<br>
-		<p>The following steps show how a JWT is obtained and used to access APIs or resources</p>
-		<br>
-		<ol>
-			<li><strong>The application or client request authorization to the authorization server</strong>. This is performed through one of the different authorization flows. For example, a typical <i>OpenID Connect</i> compilan web application will go thourgh the <i style="color:red;">/oauth/authorize</i> endpoint using the <i style="color:blue"></i>authorization code flow</li>
-			<li>When the authorization is granted, the authorization server returns an access token to the application</li>
-			<li>The application uses the access token to access a protected resource (like an API)</li>
-		</ol>
-		<br>
-		<p>Do note that with signed tokens, all the information contained within the token is exposed to users or other parties, even though they are unable to change it. This means you should not push not secret information within the token</p>
-	</body>
-</html>
+<div style="text-align:justify;">
+	<p>This can be, in certain cases, a stateless authotization mechanisms. The server's protected routes will check for a valid JWT in the Authorization header, and if it's present, the user will be allowed to access protected resources. If the JWT contains the necessary data, the need to query the database for certain operations may be reduced, though, this may not always be the case</p>
+	<br>
+	<p>Is the token is sent in the Authorization header, Cross-Origin Resource Sharing (CORS) won't be an issue as it doesn't use cookies</p>
+	<br>
+	<p>The following steps show how a JWT is obtained and used to access APIs or resources</p>
+	<br>
+	<ol>
+		<li><strong>The application or client request authorization to the authorization server</strong>. This is performed through one of the different authorization flows. For example, a typical <i>OpenID Connect</i> compilan web application will go thourgh the <i style="color:red;">/oauth/authorize</i> endpoint using the <i style="color:blue"></i>authorization code flow</li>
+		<li>When the authorization is granted, the authorization server returns an access token to the application</li>
+		<li>The application uses the access token to access a protected resource (like an API)</li>
+	</ol>
+	<br>
+	<p>Do note that with signed tokens, all the information contained within the token is exposed to users or other parties, even though they are unable to change it. This means you should not push not secret information within the token</p>
+</div>
