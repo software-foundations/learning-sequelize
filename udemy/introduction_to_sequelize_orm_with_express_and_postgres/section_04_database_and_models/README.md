@@ -727,3 +727,53 @@ export default (sequelize) => {
 	return User;
 }
 ```
+
+# Create a role model
+
+```bash
+mkdir server/src/models/role.js
+```
+<a href="https://sequelize.org/docs/v6/core-concepts/assocs/">Belongs To</a>
+
+<div style="text-align:justify">
+	<p>For example, we have the models <code>Team</code> and <code>Player</code>. We want to tell Sequelize that there is a <strong>One-To-Many</strong> relationship between them, meaning that <i>one Team has many Players, while each Player belongs to a single Team</i></p>
+	<p>The code to reach this is below</p>
+	<code>Team.hasMany(Player);</code>
+	<code>Player.belongsTo(Team);</code>
+</div>
+
+- role.js
+
+```javascript
+import { Model, DataTypes } from 'sequelize';
+
+export default (sequelize) => {
+
+	class Role extends Model
+	{
+
+		static associate(models)
+		{
+
+			Role.belongsTo(models.User);
+
+		}
+	}
+
+	Role.init(
+		{
+			role:
+			{
+				type: DataTypes.STRING
+			},
+		},
+		{
+			sequelize,
+			modelName: 'Role'
+		}
+	);
+
+	return Role;
+}
+
+```
