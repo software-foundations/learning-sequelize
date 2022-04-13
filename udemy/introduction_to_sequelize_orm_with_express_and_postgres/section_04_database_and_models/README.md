@@ -452,3 +452,153 @@ export default class TestsHelpers {
 		</ul>
 	</ul>
 </div>
+
+# Creating the User model
+
+<div>
+	<a href="Associations">Associations</a>
+</div>
+
+<div style="text-align:justify">
+	<p>Sequelize supports the standard associations: One-To-One, One-To-Many and Many-To-Many.</p>
+	<p>To do this, Sequelize provides four types of associations that should be combined to create them</p>
+	<ul>
+		<li>The <code>HasOne</code> association</li>
+		<li>The <code>BelongsTo</code> association</li>
+		<li>The <code>HasMany</code> association</li>
+		<li>The <code>BelongsToMany</code> association</li>
+	</ul>
+</div>
+
+<a href="https://sequelize.org/docs/v6/core-concepts/model-basics/">Model Definition</a>
+
+<div style="text-align:justify">
+	<p>Models can be defined in two equivalent ways in Sequelize</p>
+	<ul>
+		<li>Calling <code>sequelize.define(modelName, attributes, options)</code></li>
+		<li>Extending Model and calling <code>init(attributes, options)</code></li>
+	</ul>
+	<br>
+	<p>After a model is defined, it is available within <code>sequelize.models</code> by its model name.</p>
+</div>
+
+```bash
+touch server/src/models/user.js
+```
+
+- user.js
+
+```javascript
+import { Model, DataTypes } from 'sequelize';
+
+export default (sequelize) => {
+
+	class User extends Model {
+
+		static associate(models) {
+
+			// User.<RefreshToken> can be whatever you want
+			// We doesn't even have to assign to these two properties
+			// We will see later that we need to assign to the properties
+			User.RefreshToken = User.hasOne(models.RefreshToken);
+
+			User.Roles = User.hasMany(models.Role);
+
+		}
+
+		static async hashPassword(password) {
+
+		}
+
+		static async createNewUser({
+			email,
+			password,
+			roles,
+			username,
+			firstName,
+			lastName,
+			refreshToken,
+		}) {
+
+		}
+	}
+
+	// Defining the properties of the user model
+	User.init(
+		{
+			email: 
+			{
+				// Define a String with lentgh 100
+				type: DataTypes.STRING(100),
+
+				allowNull: false,
+
+				// Means that we are going to create a index to the email field
+				unique: true,
+
+				validate:
+				{
+					// If its not an email, we are going to say not a valid email
+					isEmail:
+					{
+						msg: 'Not a valid email address',
+					},
+				},
+			},
+
+			password:
+			{
+				type: DataTypes.STRING,
+				allowNull: false,
+			},
+
+			username:
+			{
+				type: DataTypes.STRING(50),
+				unique: true,
+				validate:
+				{
+					// length
+					len:
+					{
+						// [<minimum>, <maximum>]
+						args: [2, 50],
+						msg: "userName must contain between 2 and 50 characters",
+					},
+				},
+			},
+
+			firstName:
+			{
+				type: DataTypes.STRING(50),
+				validate:
+				{
+					len:
+					{
+						args: [3, 50],
+						msg: "firstName must contain between 3 and 50 characters",
+					}
+				}
+			},
+
+			lastName:
+			{
+				type: DataTypes.STRING(50),
+				validate:
+				{
+					len:
+					{
+						args: [3, 50],
+						msg: "lastName must contain between 3 and 50 characters",
+					}
+				}
+			},
+		},
+
+		// the second argument its an option object
+		{sequelize, modelName: 'User'}
+	);
+
+	return User;
+}
+```
