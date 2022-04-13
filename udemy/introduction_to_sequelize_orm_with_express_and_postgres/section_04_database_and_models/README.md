@@ -549,7 +549,9 @@ export default (sequelize) => {
 		static async hashPassword(password) {
 
 			// bcrypt.hash returns a promise
-			return bcrypt.hash(data=password, saltOrRound=environment.saltRounds);
+			return bcrypt.hash(
+				data=password, saltOrRound=environment.saltRounds
+			);
 
 		}
 
@@ -563,6 +565,41 @@ export default (sequelize) => {
 			refreshToken,
 		}) {
 
+			// Transactions allow us to rollback all of the changes
+			// This transaction excpect a callback
+			return sequelize.transaction(async () => {
+
+				let rolesToSave = [];
+
+				// roles = ["customer", "admin"]
+				if(roles && Array.isArray(roles))
+				{
+					rolesToSave = roles.map(role => ({ role }))
+					// rolesToSave = {role: "customer", role: "admin"}
+				}
+
+				// Here comes all the logic to create a new user
+				await User.create(
+					{
+						email,
+						password,
+						username,
+						firstName,
+						lastName,
+						RefreshToken:
+						{
+							token: refreshToken
+						},
+
+						// It need to be an array of objects
+						// Roles: [{role: 'customer', role: 'admin'}]
+						Roles: rolesToSave,
+					},
+					{
+						include: [User.RefreshToken, User.Roles]
+					},
+				);
+			});
 		}
 	}
 
@@ -581,7 +618,7 @@ export default (sequelize) => {
 
 				validate:
 				{
-					// If its not an email, we are going to say not a valid email
+					// If it isn't an email, say it is not a valid email
 					isEmail:
 					{
 						msg: 'Not a valid email address',
