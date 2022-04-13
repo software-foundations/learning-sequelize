@@ -46,7 +46,7 @@ export default class Database {
 		}
 
 		// Register the models
-		RegisterModels(this.connection)
+		registerModels(this.connection);
 
 		// Sync the models
 		await this.sync();
@@ -62,7 +62,7 @@ export default class Database {
 		await this.connection.sync({
 			logging: false,
 			force: this.isTestEnvironment,
-		})
+		});
 
 		if (!this.isTestEnvironment) {
 			console.log("Connection synced successfully");
