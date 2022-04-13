@@ -731,7 +731,7 @@ export default (sequelize) => {
 # Create a role model
 
 ```bash
-mkdir server/src/models/role.js
+touch server/src/models/role.js
 ```
 <a href="https://sequelize.org/docs/v6/core-concepts/assocs/">Belongs To</a>
 
@@ -774,6 +774,48 @@ export default (sequelize) => {
 	);
 
 	return Role;
+}
+
+```
+
+# Adding Refresh Token
+
+```bash
+touch server/src/models/refresh-token.js
+```
+
+- refresh-token.js
+
+```javascript
+import { Model, DataTypes } from 'sequelize';
+
+export default (sequelize) => {
+
+	class RefreshToken extends Model
+	{
+
+		static associate(models)
+		{
+
+			RefreshToken.belongsTo(models.User);
+
+		}
+	}
+
+	RefreshToken.init(
+		{
+			token:
+			{
+				type: DataTypes.STRING
+			},
+		},
+		{
+			sequelize,
+			modelName: 'RefreshToken'
+		}
+	);
+
+	return RefreshToken;
 }
 
 ```
