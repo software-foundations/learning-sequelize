@@ -1,4 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
+import bcrypt from 'bcrypt';
+import environment from '../config/environment'
 
 export default (sequelize) => {
 
@@ -16,6 +18,9 @@ export default (sequelize) => {
 		}
 
 		static async hashPassword(password) {
+
+			// bcrypt.hash returns a promise
+			return bcrypt.hash(data=password, saltOrRound=environment.saltRounds);
 
 		}
 
@@ -105,8 +110,53 @@ export default (sequelize) => {
 		},
 
 		// the second argument its an option object
-		{sequelize, modelName: 'User'}
+		// the defaultScope
+		{
+			sequelize,
+			modelName: 'User',
+			defaultScope: { attributes: {exclude: ['password']}},
+			scope:
+			{
+				// Scope which allows pass password to the query
+				withPassword:
+				{
+					attributes: { include: ['password'] },
+				},
+			}
+		}
 	);
+
+	// Create instance method
+	// User.prototype.<someMethod>
+
+	/*
+	user = await User.findOne({ where: {email: 'test@example.com'} })
+	user.email, user.username, user.firstName, user.lastName, user.password
+	await user.comparePasswords('test123#')
+
+	Even if the password is hashed, we don't want to expose
+	that password to anyone.
+
+	However, we expose when we need it. We're going to pass in scope and say:
+		"Hey, including the query the password, but otherwise,
+		we are notgoing to include the password"
+
+	*/
+
+	// this method returns a boolean
+	User.prototype.comparePasswords = async function(password) {
+		return bcrypt.compare(password, this.password)
+	}
+
+	// A hook is a code which run after or before certain action
+
+	// hook
+	// It hashes password before save it the User model
+	// NEVER SAVE PLAIN TEXT
+	User.beforeSave(async (user, options) => {
+		const hashedPassword = await User.hashPassword(user.password);
+		user.password = hashedPassword;
+	});
 
 	return User;
 }

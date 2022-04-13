@@ -482,6 +482,44 @@ export default class TestsHelpers {
 	<p>After a model is defined, it is available within <code>sequelize.models</code> by its model name.</p>
 </div>
 
+<a href="https://www.npmjs.com/package/bcrypt">Bcrypt</a>
+
+<div style="text-align:justify">
+	<p>bcrypt uses whatever Promise implementation is available in <code>global.Promise</code>. NodeJS >= 0.12 has a native Promise implementation built in. However, this should work in any Promises/A+ compliant implementation.</p>
+	<p>Async methods that accept a callback, return a <code>Promise</code> when callback is not specified if Promise support is available.</p>
+	<br>
+	<h2>Example of bcrypt.compare usage</h2>
+	<code>
+		// Load hash from your password DB.
+		bcrypt.compare(myPlaintextPassword, hash).then(function(result) {
+		    // result == true
+		});
+	</code>
+</div>
+<a href="https://sequelize.org/docs/v6/other-topics/hooks/">Models.beforeSave</a>
+
+<a href="https://github.com/sequelize/sequelize/blob/v6/src/hooks.js#L7">Available hooks</a>
+
+<div style="text-align:justify">
+	<p>Hooks (also known as lifecycle events), are functions which are called before and after calls in sequelize are executed. For example, if you want to always set a value on a model before saving it, you can add a <code>beforeUpdate</code> hook.</p>
+	<p><strong>Note:</strong> <i>Arguments to hooks are passed by reference. This means, that you can change the values, and this will be reflected in the insert / update statement. A hook may contain async actions - in this case the hook function should return a promise.</i></p>
+	<br>
+	<h2>Declaring Hooks</h2>
+	<p>Arguments to hooks are passed by reference. This means, that you can change the values, and this will be reflected in the insert / update statement. A hook may contain async actions - in this case the hook function should return a promise.</p>
+	<p>There are currently three ways to programmatically add hooks:</p>
+	<ol>
+		<li>Via the <code>.init()</code> method</li>
+		<li>Via the <code>.addHook()</code> method</li>
+		<li>Via the direct method</li>
+	</ol>
+	<p>Example of hooks</p>
+	<ul>
+		<li>
+			<code>beforeSave(instance, options)</code>:	A hook that is run before creating or updating a single instance, It proxies <code>beforeCreate</code> and <code>beforeUpdate</code>
+		</li>
+	</ul>
+</div>
+
 ```bash
 touch server/src/models/user.js
 ```
@@ -490,6 +528,8 @@ touch server/src/models/user.js
 
 ```javascript
 import { Model, DataTypes } from 'sequelize';
+import bcrypt from 'bcrypt';
+import environment from '../config/environment'
 
 export default (sequelize) => {
 
@@ -507,6 +547,9 @@ export default (sequelize) => {
 		}
 
 		static async hashPassword(password) {
+
+			// bcrypt.hash returns a promise
+			return bcrypt.hash(data=password, saltOrRound=environment.saltRounds);
 
 		}
 
@@ -596,8 +639,53 @@ export default (sequelize) => {
 		},
 
 		// the second argument its an option object
-		{sequelize, modelName: 'User'}
+		// the defaultScope
+		{
+			sequelize,
+			modelName: 'User',
+			defaultScope: { attributes: {exclude: ['password']}},
+			scope:
+			{
+				// Scope which allows pass password to the query
+				withPassword:
+				{
+					attributes: { include: ['password'] },
+				},
+			}
+		}
 	);
+
+	// Create instance method
+	// User.prototype.<someMethod>
+
+	/*
+	user = await User.findOne({ where: {email: 'test@example.com'} })
+	user.email, user.username, user.firstName, user.lastName, user.password
+	await user.comparePasswords('test123#')
+
+	Even if the password is hashed, we don't want to expose
+	that password to anyone.
+
+	However, we expose when we need it. We're going to pass in scope and say:
+		"Hey, including the query the password, but otherwise,
+		we are notgoing to include the password"
+
+	*/
+
+	// this method returns a boolean
+	User.prototype.comparePasswords = async function(password) {
+		return bcrypt.compare(password, this.password)
+	}
+
+	// A hook is a code which run after or before certain action
+
+	// hook
+	// It hashes password before save it the User model
+	// NEVER SAVE PLAIN TEXT
+	User.beforeSave(async (user, options) => {
+		const hashedPassword = await User.hashPassword(user.password);
+		user.password = hashedPassword;
+	});
 
 	return User;
 }
