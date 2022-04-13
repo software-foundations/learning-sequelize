@@ -27,6 +27,7 @@ touch index.js
 ```javascript
 import cls from 'cls-hooked';
 import { Sequelize } from 'sequelize';
+import { registerModels } from '../models';
 
 export default class Database {
 	constructor(environment, dbConfig) {
@@ -218,4 +219,132 @@ export default models;
 ```javascript
 // Register the models
 registerModels(this.connection)
+```
+
+# Adding the server
+
+<div style="text-align:justify">
+	<ul>
+		<li>The server is responsible for
+			<ol>
+				<li>Connecting to the database</li>
+				<li>Creating express app</li>
+				<li>Listening the port that we specify</li>
+			</ol>
+		</li>
+	</ul>
+	
+</div>
+
+## Creating the server file
+
+```bash
+touch server/src/server.js
+```
+
+- server.js
+
+```javascript
+/* Remember config/index.js import all environment variavles
+
+	- index.js
+
+		import dotenv from 'dotenv';
+
+		dotenv.config();
+*/
+import './config';
+
+// It import index.js from ./database folder
+import Database from './database/';
+
+// Import environment variable from ./config/environment.js
+import environment from './config/environment'
+
+// Import dbConfig from ./config/database.js
+import dbConfig from './config/database'
+
+// IIFE = Immediately Invoked Function Expression
+// It means that a funciton will be executed after its definition
+(async () => {
+
+	try {
+
+		const db = new Database(environment.nodeEnv, dbConfig);
+
+		await db.connect();
+
+	} catch(err) {
+		console.error(
+			'Something went wrong when initialize the server:\n', err.stack
+		);
+	}
+
+})();
+```
+
+## Run the server
+
+```bash
+cd /server
+npm run dev
+```
+
+- output
+
+```console
+/postgres/connection-manager.js:184:24)
+    at Client._handleErrorWhileConnecting (/home/bruno/Documents/dev/learning-sequelize/udemy/introduction_to_sequelize_orm_with_express_a
+nd_postgres/server/node_modules/pg/lib/client.
+js:305:19)
+    at Client._handleErrorMessage (/home/bruno
+/Documents/dev/learning-sequelize/udemy/introd
+uction_to_sequelize_orm_with_express_and_postg
+res/server/node_modules/pg/lib/client.js:325:1
+9)
+    at Connection.emit (events.js:400:28)
+    at Connection.emit (domain.js:470:12)
+    at /home/bruno/Documents/dev/learning-sequ
+elize/udemy/introduction_to_sequelize_orm_with
+_express_and_postgres/server/node_modules/pg/l
+ib/connection.js:114:12
+[nodemon] clean exit - waiting for changes bef
+ore restart
+```
+
+- Up the containered databases
+
+```bash
+cd server/
+
+# Avoid port conflicts
+sudo systemctl stop postgresql@13-main.service
+sudo systemctl stop postgresql.service
+
+sudo systemctl status postgresql@13-main.service
+sudo systemctl status postgresql.service
+
+sudo docker-compose up -d
+```
+
+- run server
+
+```bash
+npm run dev
+```
+
+- output
+
+```console
+> server@1.0.0 dev /home/bruno/Documents/dev/learning-sequelize/udemy/introduction_to_sequelize_orm_with_express_and_postgres/server                                
+> NODE_ENV=development nodemon --exec babel-node src/server.js                    
+                                         
+[nodemon] 2.0.12                         
+[nodemon] to restart at any time, enter `rs`                                      
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `babel-node src/server.js`
+Connection to the database has been established successfully
+Connection synced successfully
+[nodemon] clean exit - waiting for changes before restart
 ```
