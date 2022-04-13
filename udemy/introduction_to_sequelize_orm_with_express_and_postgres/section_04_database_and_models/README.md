@@ -400,3 +400,55 @@ export default class TestsHelpers {
 
 }
 ```
+
+# Models overview
+
+<div style="">
+	<p>We will have 3 models</p>
+	<ul>
+		<li>User</li>
+		<li>Refresh Token</li>
+		<li>Roles</li>
+	</ul>
+	<br>
+	<h2>User model</h2>
+	<ul>
+		<li>User will have many roles</li>
+		<li>User will have one refresh token</li>
+		<li>Properties</li>
+		<ul>
+			<li>email</li>
+			<li>password</li>
+			<li>username</li>
+			<li>firstName</li>
+			<li>lastName</li>			
+		</ul>
+	</ul>
+	<br>
+	<h2>Roles model</h2>
+	<ul>
+		<li>Roles will belong to a User</li>
+		<li>Properties</li>
+		<ul>
+			<li>role (string)</li>
+		</ul>
+	</ul>
+	<br>
+	<h2>Refresh Token model</h2>
+	<ul>
+		<li>Refresh Token will belong to a User</li>
+		<li>Properties</li>
+		<ul>
+			<li>token (string)</li>
+		</ul>
+	</ul>
+	<br>
+	<h2>Roles model</h2>
+	<ul>
+		<li>Roles will belong to a User</li>
+		<li>Properties</li>
+		<ul>
+			<li>role (string)</li>
+		</ul>
+	</ul>
+</div>
