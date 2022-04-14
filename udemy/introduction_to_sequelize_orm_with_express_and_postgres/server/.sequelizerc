@@ -1,0 +1,13 @@
+const path = require('path');
+
+module.exports = {
+
+	// get the abs path for the configuration located at src/config/database.js
+	'config': path.resolve('src', 'config', 'database.js'),
+
+	// get the abs path for src/models
+	'models-path': path.resolve('src', 'models'),
+
+	'migrations-path': path.resolve('src', 'database', 'migrations'),
+
+};

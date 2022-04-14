@@ -848,3 +848,81 @@ npm run dev
 	<br>
 	<li>So, the fact of the sequelize create the things in database is great, but <strong>we need migrations</strong></li>
 </div>
+
+---
+
+# Configuring the Sequelize CLI
+
+## Create the file
+
+```bash
+touch server/.sequelizerc
+```
+
+<a href="https://www.geeksforgeeks.org/node-js-path-resolve-method/">path.resolve() method</a>
+
+<div style="text-align:justify">
+	<p>The <code>path.resolve()</code> method is used to resolve a sequence of path-segments to an absolute path. It works by processing the sequence of paths from right to left, prepending each of the paths until the absolute path is created. The resulting path is normalized and trailing slashes are removed as required. If no path segments are given as parameters, then the absolute path of the current working directory is used.</p>
+</div>
+
+- .sequelizerc
+
+```javascript
+const path = require('path');
+
+module.exports = {
+
+	// get the abs path for the configuration located at src/config/database.js
+	'config': path.resolve('src', 'config', 'database.js'),
+
+	// get the abs path for src/models
+	'models-path': path.resolve('src', 'models'),
+
+	'migrations-path': path.resolve('src', 'database', 'migrations'),
+
+};
+```
+
+## Check sequelize commands
+
+```bash
+cd server/
+npx sequelize
+```
+
+- output
+
+```console
+Sequelize CLI [Node: 14.17.4, CLI: 6.2.0, ORM: 6.6.5]
+
+sequelize <command>
+                                                
+Commands:                                       
+  sequelize db:migrate                        Run pending migrations
+  sequelize db:migrate:schema:timestamps:add  Update migration table to have timestamps
+  sequelize db:migrate:status                 List the status of all migrations                     
+  sequelize db:migrate:undo                   Reverts a migration                                   
+  sequelize db:migrate:undo:all               Revert all migrations ran
+  sequelize db:seed                           Run specified seeder
+  sequelize db:seed:undo                      Deletes data from the database
+  sequelize db:seed:all                       Run every seeder
+  sequelize db:seed:undo:all                  Deletes data from the database
+  sequelize db:create                         Create database specified by configuration
+  sequelize db:drop                           Drop database specified by configuration
+  sequelize init                              Initializes project
+  sequelize init:config                       Initializes configuration
+  sequelize init:migrations                   Initializes migrations
+  sequelize init:models                       Initializes models
+  sequelize init:seeders                      Initializes seeders
+  sequelize migration:generate                Generates a new migration file
+                                                                         [aliases: migration:create]
+  sequelize model:generate                    Generates a model and its migration
+                                                                             [aliases: model:create]
+  sequelize seed:generate                     Generates a new seed file       [aliases: seed:create]
+
+Options:
+  --version  Show version number                                                           [boolean]
+  --help     Show help                                                                     [boolean]
+
+Please specify a command
+```
