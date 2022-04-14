@@ -819,3 +819,32 @@ export default (sequelize) => {
 }
 
 ```
+
+# Inspecting the new tables with DBeaver
+
+<div style="text-align:justify">
+	<p>In <code>/server/src/database/index.js</code> Remember that <code>await this.sync();</code> will create the table if it doesn't exist</p>
+</div>
+
+- Run
+
+```bash
+cd server/
+npm run dev
+```
+
+- Go to the beaver and see the tables
+
+<div style="text-align:justify">
+	<ul>
+		<li>An advice is tha <strong>all these things (creation of tables) shouldn't be determined by sequelize</strong></li>
+		<li>Because we don't have a mechanism to roll back, for example, on migration</li>
+		<li>That's where the concept of migration comes in</li>
+		<br>
+		<li><strong>When we want to create a new table, when we want to create a new column or the new index, we need a migration</strong></li>
+		<br>
+		<li><strong>We mustn't let sequelize determine what is going to happen because Migrations is a way to have a record/history of what changes were made to the database</strong></li>
+	</ul>
+	<br>
+	<li>So, the fact of the sequelize create the things in database is great, but <strong>we need migrations</strong></li>
+</div>
